@@ -128,3 +128,20 @@ $RECYCLE.BIN/
 
 #MegaBasterd DB
 *.db
+
+# Go specific
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.html
+go.work
+vendor/
+
+# Fyne packaging
+*.tar.xz
+*.app
