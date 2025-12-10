@@ -2,6 +2,8 @@
 
 Welcome to the MegaBasterd Golang porting documentation! This repository contains comprehensive guides and references for porting MegaBasterd from Java to Go.
 
+> **Note on Code Examples:** All code examples in these documents are illustrative and may not include all necessary imports for brevity. When implementing, ensure you add all required imports (e.g., `fmt`, `time`, `strconv`, etc.) as needed.
+
 ## 📚 Documentation Overview
 
 This documentation suite consists of **four comprehensive guides** totaling over **3,200 lines** of detailed technical documentation:
