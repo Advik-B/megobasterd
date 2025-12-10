@@ -401,6 +401,10 @@ client := resty.New()
 resp, err := client.R().
     SetHeader("User-Agent", "MegaBasterd").
     Get("https://api.mega.co.nz/...")
+if err != nil {
+    log.Fatal(err)
+}
+// Use resp.Body() to get response
 ```
 
 ### HTTP POST with JSON
