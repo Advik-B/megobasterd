@@ -1,0 +1,21 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "megobasterd",
+  "outputfilename": "megobasterd",
+  "wailsjsdir": "./frontend",
+  "frontend:install": "cd frontend && npm install",
+  "frontend:build": "cd frontend && npm run build",
+  "frontend:dev:watcher": "cd frontend && npm run dev",
+  "frontend:dev:serverUrl": "http://localhost:34115",
+  "author": {
+    "name": "Advik-B",
+    "email": ""
+  },
+  "info": {
+    "companyName": "MegaBasterd",
+    "productName": "MegaBasterd Go Edition",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright © 2025",
+    "comments": "MEGA downloader in Go with Wails"
+  }
+}
