@@ -67,17 +67,20 @@ git clone https://github.com/Advik-B/megobasterd.git
 cd megobasterd
 
 # Install dependencies
-make deps
+python3 build.py deps
 
 # Run in development mode
-make dev
+python3 build.py dev
 ```
 
 ### Building
 
 ```bash
 # Build for current platform
-make build
+python3 build.py build
+
+# Build with optimizations (UPX compression)
+python3 build.py build --upx
 
 # The executable will be in build/bin/
 ```
@@ -86,7 +89,7 @@ make build
 
 1. **Launch the application**
    ```bash
-   make dev  # Development mode with hot reload
+   python3 build.py dev  # Development mode with hot reload
    # or
    ./build/bin/megobasterd  # Production build
    ```
@@ -124,8 +127,9 @@ megobasterd/
 │   └── svelte.config.js
 ├── wails.json                # Wails configuration
 ├── go.mod
-├── Makefile
-└── README-WAILS.md          # This file
+├── build.py                  # Python build script (replaces Makefile)
+├── run.py                    # Quick run script
+└── README-WAILS.md           # This file
 ```
 
 ## Development
@@ -133,7 +137,7 @@ megobasterd/
 ### Running in Dev Mode
 
 ```bash
-make dev
+python3 build.py dev
 ```
 
 This starts:
@@ -145,20 +149,20 @@ This starts:
 
 ```bash
 # Optimized build with UPX compression
-make build-prod
+python3 build.py build --upx
 
 # Or standard build
-make build
+python3 build.py build
 ```
 
 ### Running Tests
 
 ```bash
 # Run all tests
-make test
+python3 build.py test
 
 # With coverage
-make test-coverage
+python3 build.py test --coverage
 ```
 
 ## Download Functionality
@@ -218,24 +222,36 @@ max_workers: 6
 language: "en"
 ```
 
-## Makefile Commands
+## Build Script Commands
 
 | Command | Description |
 |---------|-------------|
-| `make dev` | Run with hot reload |
-| `make build` | Build for current platform |
-| `make build-prod` | Optimized build with compression |
-| `make test` | Run all tests |
-| `make test-coverage` | Run tests with coverage report |
-| `make deps` | Install all dependencies |
-| `make clean` | Remove build artifacts |
-| `make doctor` | Check Wails setup |
+| `python3 build.py dev` | Run with hot reload |
+| `python3 build.py build` | Build for current platform |
+| `python3 build.py build --upx` | Optimized build with UPX compression |
+| `python3 build.py test` | Run all tests |
+| `python3 build.py test --coverage` | Run tests with coverage report |
+| `python3 build.py deps` | Install all dependencies |
+| `python3 build.py clean` | Remove build artifacts |
+| `python3 build.py doctor` | Check Wails setup |
+| `python3 build.py install-wails` | Install Wails CLI |
+| `python3 build.py generate` | Generate Wails bindings |
+
+### Quick Run Script
+
+For convenience, you can also use `run.py`:
+
+```bash
+./run.py dev          # Same as: python3 build.py dev
+./run.py build        # Same as: python3 build.py build
+./run.py test         # Same as: python3 build.py test
+```
 
 ## Troubleshooting
 
 ### "wails: command not found"
 ```bash
-make install-wails
+python3 build.py install-wails
 # or
 go install github.com/wailsapp/wails/v2/cmd/wails@latest
 ```
