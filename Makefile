@@ -1,19 +1,16 @@
-.PHONY: build test clean install run deps lint
+.PHONY: build test clean install run deps lint dev
+
+# Development - run with hot reload
+dev:
+	wails dev
 
 # Build the application
 build:
-	go build -o bin/megobasterd cmd/megobasterd/main.go
+	wails build
 
-# Build for all platforms
-build-all:
-	GOOS=linux GOARCH=amd64 go build -o bin/megobasterd-linux-amd64 cmd/megobasterd/main.go
-	GOOS=windows GOARCH=amd64 go build -o bin/megobasterd-windows-amd64.exe cmd/megobasterd/main.go
-	GOOS=darwin GOARCH=amd64 go build -o bin/megobasterd-darwin-amd64 cmd/megobasterd/main.go
-	GOOS=darwin GOARCH=arm64 go build -o bin/megobasterd-darwin-arm64 cmd/megobasterd/main.go
-
-# Run the application
-run:
-	go run cmd/megobasterd/main.go
+# Build for production (optimized)
+build-prod:
+	wails build -clean -upx
 
 # Run tests
 test:
@@ -26,29 +23,30 @@ test-coverage:
 
 # Clean build artifacts
 clean:
-	rm -rf bin/
+	rm -rf build/
+	rm -rf frontend/dist/
+	rm -rf frontend/node_modules/
 	rm -f coverage.out coverage.html
 
 # Install dependencies
 deps:
 	go mod download
 	go mod tidy
+	cd frontend && npm install
 
 # Run linter
 lint:
 	golangci-lint run ./...
 
-# Install the application
-install:
-	go install cmd/megobasterd/main.go
+# Install Wails
+install-wails:
+	go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-# Package with Fyne (requires fyne CLI)
-package-fyne:
-	fyne package -os linux -icon assets/icon.png
-	fyne package -os windows -icon assets/icon.png
-	fyne package -os darwin -icon assets/icon.png
+# Generate Wails bindings
+generate:
+	wails generate module
 
-# Development build with race detector
-dev:
-	go build -race -o bin/megobasterd-dev cmd/megobasterd/main.go
-	./bin/megobasterd-dev
+# Doctor - check Wails setup
+doctor:
+	wails doctor
+

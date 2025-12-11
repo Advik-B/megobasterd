@@ -1,39 +1,44 @@
 package main
 
 import (
-	"fmt"
-	"log"
+"context"
+"embed"
+"fmt"
+"log"
 
-	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
-	"github.com/Advik-B/megobasterd/internal/config"
-	"github.com/Advik-B/megobasterd/internal/ui"
+"github.com/Advik-B/megobasterd/internal/app"
+"github.com/wailsapp/wails/v2"
+"github.com/wailsapp/wails/v2/pkg/options"
+"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 )
 
-const (
-	// VERSION represents the current version of MegaBasterd
-	VERSION = "1.0.0-go"
-)
+//go:embed all:frontend/dist
+var assets embed.FS
+
+const VERSION = "1.0.0-wails"
 
 func main() {
-	fmt.Printf("MegaBasterd Go Edition v%s\n", VERSION)
-	fmt.Println("Starting application...")
+fmt.Printf("MegaBasterd Go Edition v%s (Wails)\n", VERSION)
 
-	// Initialize configuration
-	cfg, err := config.Load()
-	if err != nil {
-		log.Printf("Warning: Could not load config: %v. Using defaults.", err)
-		cfg = config.GetDefault()
-	}
+// Create an instance of the app structure
+megaApp := app.NewApp()
 
-	// Create Fyne application
-	a := app.NewWithID("com.megobasterd.go")
-	
-	// Create main window
-	mainWindow := ui.NewMainWindow(a, cfg)
-	
-	// Show and run
-	mainWindow.Show()
-	a.Run()
+// Create application with options
+err := wails.Run(&options.App{
+Title:  "MegaBasterd - Go Edition",
+Width:  1200,
+Height: 800,
+AssetServer: &assetserver.Options{
+Assets: assets,
+},
+BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
+OnStartup:        megaApp.Startup,
+Bind: []interface{}{
+megaApp,
+},
+})
+
+if err != nil {
+log.Fatal("Error:", err)
+}
 }
