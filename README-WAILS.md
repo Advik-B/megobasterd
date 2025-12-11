@@ -6,7 +6,7 @@ A modern, cross-platform MEGA downloader built with Go and Wails, featuring a be
 
 ✅ **Working Download Functionality**
 - Real MEGA API integration
-- Multi-threaded downloads
+- HTTP streaming downloads
 - Progress tracking with speed calculation
 - Pause/Resume capability
 - Real-time UI updates
@@ -21,37 +21,44 @@ A modern, cross-platform MEGA downloader built with Go and Wails, featuring a be
 - Windows, macOS, Linux support
 - Native performance with Go backend
 - Web technologies for UI (Svelte)
+- Python-based build system (no Make dependency)
 
 ## Technology Stack
 
 - **Backend:** Go 1.21+
-- **Frontend:** Svelte + Vite
-- **Framework:** Wails v2
+- **Frontend:** Svelte 4 + Vite 5
+- **Framework:** Wails v2.8.0
 - **API Client:** go-resty/resty
 - **Configuration:** Viper
 - **Crypto:** golang.org/x/crypto
+- **Build System:** Python 3 (cross-platform)
 
 ## Quick Start
 
 ### Prerequisites
 
-1. **Go 1.21+**
+1. **Python 3.6+** (for build scripts)
+   ```bash
+   python3 --version
+   ```
+
+2. **Go 1.21+**
    ```bash
    go version
    ```
 
-2. **Node.js 16+**
+3. **Node.js 16+**
    ```bash
    node --version
    npm --version
    ```
 
-3. **Wails CLI**
+4. **Wails CLI**
    ```bash
    go install github.com/wailsapp/wails/v2/cmd/wails@latest
    ```
 
-4. **Platform-specific requirements:**
+5. **Platform-specific requirements:**
    - **Linux:** `gcc`, `gtk3`, `webkit2gtk`
      ```bash
      sudo apt install gcc libgtk-3-dev libwebkit2gtk-4.0-dev
@@ -107,8 +114,10 @@ python3 build.py build --upx
 
 ```
 megobasterd/
-├── cmd/megobasterd/          # Main application entry point
-│   └── main.go
+├── main.go                   # Main application entry point (Wails)
+├── build.py                  # Cross-platform build script
+├── run.py                    # Quick wrapper script
+├── wails.json                # Wails configuration
 ├── internal/
 │   ├── app/                  # Wails app backend
 │   │   └── app.go           # Download logic & API integration
@@ -249,6 +258,13 @@ For convenience, you can also use `run.py`:
 
 ## Troubleshooting
 
+### "no Go files in D:\Github\megobasterd" error
+
+This error occurs when the project structure is incorrect. The fix has been applied:
+- `main.go` is now at the project root (not in `cmd/megobasterd/`)
+- `frontend/dist/` directory is created automatically
+- Run `python3 build.py deps` to ensure everything is set up correctly
+
 ### "wails: command not found"
 ```bash
 python3 build.py install-wails
@@ -268,6 +284,12 @@ cd frontend
 npm install
 npm run build
 ```
+
+### "pattern all:frontend/dist: no matching files found"
+This happens if the frontend hasn't been built yet. Solutions:
+1. Run `python3 build.py deps` to install frontend dependencies
+2. The `frontend/dist/.gitkeep` ensures the directory exists
+3. Wails will build the frontend automatically during `wails dev` or `wails build`
 
 ## Contributing
 
